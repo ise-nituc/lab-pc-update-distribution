@@ -1,0 +1,95 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "シミュレータで起動",
+      "type": "process",
+      "command": "C:\\ProgramData\\LabPlatformIO-v2\\releases\\pio-ststm32-20261102-v2\\runtime\\penv\\Scripts\\python.exe",
+      "args": [
+        "-I",
+        "-B",
+        "${input:adapterRoot}\\windows_launcher.py",
+        "--project",
+        "${workspaceFolder}",
+        "--distro",
+        "${input:distro}",
+        "--profile",
+        "adc-led-v1"
+      ],
+      "problemMatcher": [],
+      "runOptions": {
+        "instanceLimit": 1
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      }
+    },
+    {
+      "label": "Virtual Lab: 更新確認",
+      "type": "process",
+      "command": "${env:SystemRoot}\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+      "args": [
+        "-NoLogo",
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "RemoteSigned",
+        "-File",
+        "${input:adapterRoot}\\Manage-VirtualLab.ps1",
+        "-Mode",
+        "Check",
+        "-Distro",
+        "${input:distro}"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "Virtual Lab: 更新",
+      "type": "process",
+      "command": "${env:SystemRoot}\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+      "args": [
+        "-NoLogo",
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "RemoteSigned",
+        "-File",
+        "${input:adapterRoot}\\Manage-VirtualLab.ps1",
+        "-Mode",
+        "Update",
+        "-Distro",
+        "${input:distro}"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "Virtual Lab: 切戻し",
+      "type": "process",
+      "command": "${env:SystemRoot}\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+      "args": [
+        "-NoLogo",
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "RemoteSigned",
+        "-File",
+        "${input:adapterRoot}\\Manage-VirtualLab.ps1",
+        "-Mode",
+        "Rollback",
+        "-Distro",
+        "${input:distro}"
+      ],
+      "problemMatcher": []
+    }
+  ],
+  "inputs": [
+    {
+      "id": "adapterRoot",
+      "type": "promptString",
+      "description": "承認した simulator ツールの絶対パス"
+    },
+    {
+      "id": "distro",
+      "type": "promptString",
+      "description": "本人の既存WSL登録名（新規importしません）"
+    }
+  ]
+}
