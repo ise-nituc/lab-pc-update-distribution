@@ -8,7 +8,9 @@ function Invoke-ProductNative([string]$Tools,[string]$Operation,$Context) {
         $args=@('-NoProfile','-NonInteractive','-ExecutionPolicy','RemoteSigned','-File',(Join-Path $Tools 'Sync-CentralVirtualLab.ps1'))
         if($Operation -eq 'shared-apply'){$args+=@('-ManifestUrl',$config.manifestUrl,'-ManifestSha256',$config.manifestSha256)}
         else{$args+=@('-Mode','SelectCached','-ManifestSha256',$config.rollbackSha256)}
-        & $shell @args @test|Out-Null
+        # PS5.1 powershell.exe -File misbinds multiple splatted arrays.
+        $nativeArguments=@($args)+@($test)
+        & $shell @nativeArguments|Out-Null
         if($LASTEXITCODE -ne 0){throw 'SharedProductOperationFailed'}
         return [pscustomobject]@{status='Applied'}
     }
